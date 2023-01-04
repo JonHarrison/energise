@@ -29,10 +29,14 @@ function dumpAddress(entry) {
 // })
 // .then(data => console.log(data.contents));
 
+// Cors proxies https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
 
 const queryURL = `https://chargepoints.dft.gov.uk/api/retrieve/registry/format/json/lat/${geocode.lat}/long/${geocode.lon}/dist/${radius}/units/${radiusUnits}/limit/${limit}`;
 // const proxyURL = `https://api.allorigins.win/get?url=${encodeURIComponent(queryURL)}`;
-const proxyURL = `https://cors-anywhere.herokuapp.com/${queryURL}`;
+// const proxyURL = `https://cors-anywhere.herokuapp.com/${queryURL}`;
+// const proxyURL = `https://cors.io?${queryURL}`;
+//const proxyURL = `https://crossorigin.me/${queryURL}`;
+const proxyURL = `https://proxy.cors.sh/${queryURL}`;
 // const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
 fetch(proxyURL) //, options)
     .then((response) => {
