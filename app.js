@@ -1,9 +1,16 @@
 const geocode = { lat: 51.509865, lon: -0.118092 }; // London
 const radius = 10; // miles
-const radiusUnits = 'miles';
+const radiusUnits = 'mi';
+const limit = 25; // maximum number of charging locations
 
 function dumpAddress(entry) {
-    console.log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
+    const {
+        ChargeDeviceLocation,
+        ChargeDeviceLocation: { Latitude: lat, Longitude: lon, LocationLongDescription: address, Address : { PostCode: postcode } } ,
+        ChargeDeviceName: name,
+        ...rest
+    } = entry;
+    console.log(`lat:${lat} lon:${lon} : ${name},${postcode}`);
 }
 
 // with fetch
@@ -23,10 +30,11 @@ function dumpAddress(entry) {
 // .then(data => console.log(data.contents));
 
 
-const queryURL = `https://chargepoints.dft.gov.uk/api/retrieve/registry/format/json/lat/${geocode.lat}/long/${geocode.lon}/dist/${radius}`;
-const proxyURL = `https://api.allorigins.win/get?url=${encodeURIComponent(queryURL)}`;
-const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
-fetch(queryURL, options)
+const queryURL = `https://chargepoints.dft.gov.uk/api/retrieve/registry/format/json/lat/${geocode.lat}/long/${geocode.lon}/dist/${radius}/units/${radiusUnits}/limit/${limit}`;
+// const proxyURL = `https://api.allorigins.win/get?url=${encodeURIComponent(queryURL)}`;
+const proxyURL = `https://cors-anywhere.herokuapp.com/${queryURL}`;
+// const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
+fetch(proxyURL) //, options)
     .then((response) => {
         if (!response.ok) {
             throw new Error(response.error)
@@ -38,7 +46,7 @@ fetch(queryURL, options)
     })
     .then(data => {
         console.log(data)
-        data.contents.forEach(dumpAddress);
+        data.ChargeDevice.forEach(dumpAddress);
     })
     .catch(err => {
         console.error(err)
