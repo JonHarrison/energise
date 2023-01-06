@@ -5,7 +5,7 @@
 let map;
 let markers = [];
 
-const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // London
+var defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // London
 
 function addEVMarkers(data) {
 
@@ -18,8 +18,11 @@ function addEVMarkers(data) {
     var icon = new google.maps.MarkerImage('./assets/icons/charging-station-solid.svg',
     null, null, null, new google.maps.Size(30, 30));
 
+    // Count the number of charging stations shown on screem
+    // console.log(data.length);
+
     data.forEach(function (entry) {
-        console.log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
+    //    console.log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
 
         const { AddressInfo, AddressInfo: { Latitude: lat, Longitude: lng },
             ...rest
@@ -113,51 +116,62 @@ function initAutocomplete() {
     // Listen for the event fired when the user selects a prediction and retrieve
     // more details for that place.
     searchBox.addListener("places_changed", () => {
-    //     const places = searchBox.getPlaces();
+        const places = searchBox.getPlaces();
 
-    //     if (places.length == 0) {
-    //         return;
-    //     }
+        if (places.length == 0) {
+            return;
+        }
 
-    //     // Clear out the old markers.
-    //     markers.forEach((marker) => {
-    //         marker.setMap(null);
-    //     });
-    //     markers = [];
+        // Clear out the old markers.
+        markers.forEach((marker) => {
+            marker.setMap(null);
+        });
+        markers = [];
 
         // For each place, get the icon, name and location.
         const bounds = new google.maps.LatLngBounds();
 
-    //     places.forEach((place) => {
-    //         if (!place.geometry || !place.geometry.location) {
-    //             console.log("Returned place contains no geometry");
-    //             return;
-    //         }
+        places.forEach((place) => {
+            if (!place.geometry || !place.geometry.location) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
 
-    //         const icon = {
-    //             url: place.icon,
-    //             size: new google.maps.Size(71, 71),
-    //             origin: new google.maps.Point(0, 0),
-    //             anchor: new google.maps.Point(17, 34),
-    //             scaledSize: new google.maps.Size(25, 25),
-    //         };
+            console.log("place.geometry.location = " + place.geometry.location);
 
-    //         // Create a marker for each place.
-    //         markers.push(
-    //             new google.maps.Marker({
-    //                 map,
-    //                 icon,
-    //                 title: place.name,
-    //                 position: place.geometry.location,
-    //             })
-    //         );
-    //         if (place.geometry.viewport) {
-    //             // Only geocodes have viewport.
-    //             bounds.union(place.geometry.viewport);
-    //         } else {
-    //             bounds.extend(place.geometry.location);
-    //         }
-    //     });
+            console.log("place.geometry.location.lat = " + place.geometry.location.lat());
+            console.log("place.geometry.location.lon = " + place.geometry.location.lng());
+
+            defaultGeocode = { lat: place.geometry.location.lat(), lon: place.geometry.location.lng()};
+
+            console.log(defaultGeocode);
+
+            retrieveEVMarkers(defaultGeocode);
+
+            const icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25),
+            };
+
+            // Create a marker for each place.
+            markers.push(
+                new google.maps.Marker({
+                    map,
+                    icon,
+                    title: place.name,
+                    position: place.geometry.location,
+                })
+            );
+            if (place.geometry.viewport) {
+                // Only geocodes have viewport.
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
+        });
         map.fitBounds(bounds);
     });
 
