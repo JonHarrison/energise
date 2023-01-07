@@ -1,136 +1,85 @@
-/* Sets header color */
-.bg-gray {
-    background-color: #2b2929;
-    color: #414141;
-}
-.bg-drkgray{
-    background-color: #1b1a1a;
-}
+/* Navbar */
 
-.logo {
-    color: #10aeb9
-}
-
-.logo-bg{
-    background-color: #236915;
-}
-
-.logo-text {
-    font-size: 35px;
-}
 
 body {
-    background-color: #2b2929;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(59, 59, 59);
+}
+.jumbotron-fluid {
+  padding:30px;
+  background-color: rgb(26, 25, 25);
+  color: #fff;
+  display: flex;
+  flex-direction: row;
 }
 
-/* Modal Styling */
-body {font-family: Arial, Helvetica, sans-serif;}
 
-/* Add Animation */
-@-webkit-keyframes animatetop {
-  from {top:-300px; opacity:0} 
-  to {top:0; opacity:1}
+.display-5 {
+  color: aqua;
+  font-weight: bold;
 }
 
-@keyframes animatetop {
-  from {top:-300px; opacity:0}
-  to {top:0; opacity:1}
+
+.btn {
+  color: whitesmoke;
+  background-color: rgb(151, 151, 37);
+  font-size: 18px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+
+a {
+  text-decoration:rgb(3, 134, 91);
 }
 
-/* Allows logo to transition to its lit up effect when hovering */
-.image_off, #logo-home:hover .image_on{
-  display:none
-}
-.image_on, #logo-home:hover .image_off{
-  display:block
+.row {
+  padding-top: 30px;
+   height: 500px;
+   color: rgb(43, 42, 42);
+   justify-content: center;
 }
 
-  #nav-container {
-    position: relative;
-    right:90%;
-    z-index: 100;
-    pointer-events: none;
-  }
-  
-  .button {
-    outline: none;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 1;
-    -webkit-appearance: none;
-    border: 0;
-    background: transparent;
-    border-radius: 0;
-    height: 70px;
-    width: 30px;
-    cursor: pointer;
-    pointer-events: auto;
-    margin-left: 25px;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-  }
-  .icon-bar {
-    display: block;
-    width: 100%;
-    height: 3px;
-    background: #aaa;
-    transition: .8s;
-  }
-  .icon-bar + .icon-bar {
-    margin-top: 5px;
-  }
-  
-  #nav-container:focus-within .button {
-    pointer-events: none;
-  }
-  #nav-container:focus-within .icon-bar:nth-of-type(1) {
-    transform: translate3d(0,4px,0) rotate(45deg);
-  }
-  #nav-container:focus-within .icon-bar:nth-of-type(2) {
-    transform: translate3d(0,-4px,0) rotate(-45deg);
-  }
-  
-  #nav-content {
-    margin-top: 70px;
-    padding: 20px;
-    width: 90%;
-    max-width: 150px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 390px;
-    /* height: calc(100% - 90px); Kept it because found it to be a cool little variant */
-    background: #313131;
-    pointer-events: auto;
-    transform: translateX(-100%);
-    transition: transform 1s;
-    will-change: transform;
-    contain: paint;
-    outline: none;
-  }
-  
-  #nav-content ul {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-  }
-  
-  #nav-content li a {
-    /* padding: 10px 5px; */
-    display: block;
-    text-transform: uppercase;
-    color: #aaa;
-    text-decoration: none;
-    transition: color .5s;
-  }
-  
-  #nav-content li a:hover {
-    color: #ca3e47;
-  }
-  
-  #nav-container:focus-within #nav-content {
-    transform: none;
-  }
+.leftcol {
+  width: 450px;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+ 
+  border-radius: 20%;
+  background-color: rgb(48, 47, 47);
+}
+
+.rightcol {
+  display: inline-block;
+  width: 700px;
+  height: 600px;
+  vertical-align: top;
+  margin-bottom: 20px;
+}
+
+img {
+  max-width: 100%;
+  height: 600px;
+  border: rgb(170, 167, 167) solid 10px;
+  border-radius: 20%;
+}
+
+.item {
+  width: 700px;
+  height: 600px;
+  height: auto;
+  float: left;
+  margin: 3px;
+  padding: 3px;
+}
+
+h1 {
+  color: rgb(255, 46, 9);
+}
+
+p {
+  color: #fff;
+}
