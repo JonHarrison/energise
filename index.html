@@ -14,20 +14,17 @@
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <link rel="stylesheet" href="./assets/style.css">
 </head>
-<body>
+<body class="h-screen">
   <header class="jumbotron jumbotron-fluid">
-           
     <div class = "container">
         <h1 class="display-5"><strong>Energise</strong></h1>
     </div>
     <div class="maplink">
         <a href="" type="button" class="btn btn-secondary btn-lg">Let's Go To Nearest Charging Point</a>
-                    
     </div>
-
 </header>
   <div class="row d-flex justify-content-center">
-    <div id="left-col" class="col leftcol">
+    <div id="left-col" class="col-3 leftcol">
         <div class="d-flex">
             <h1 class="display-4">Out of Energy</h1>
             
@@ -43,21 +40,32 @@
         </div> 
     </div>
 
-    <div class="col rightcol">
-      <!--  <div class="item">
-            <img src="./images/Map_image.png" alt="London Charging Station Map">
-         </div> -->
-         <input
-         id="pac-input"
-         class="controls"
-         type="text"
-         placeholder="Search Box"
-       />
-       <div id="map"></div>
+    <div class="col-8 rightcol row-5">
+ 
+           <div id="myModal" class="hidden pt-32 fixed w-full h-full z-10 left-0 top-0 overflow-auto" style="background-color: rgba(0,0,0,0.5);">
+         
+                <main >
+                   <!--  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"> -->
+                        <!-- Replace with your content -->
+                       <div class="px-4 py-6 sm:px-0 "> 
+                        
+                            <div class="h-screen">
+                                <!-- FUNCTIONAL MAP -->
+                                <div id="map-container" class="relative w-full h-full">
+                                    <iframe class="border-4 relative shadow-2xl  border-white rounded-lg" id="map-app " src="https://map.openchargemap.io"; frameborder="0" allow="geolocation" style="width:100%;height:85%"></iframe>
+                                </div>
+                        
+                            </div>
+                        </div> 
+              <!--      </div> -->
+            
+                </main>
+          </div>  
        
     </div>
 </div>
 
+     
     <!-- 
      The `defer` attribute causes the callback to execute after the full HTML
      document has been parsed. For non-blocking uses, avoiding race conditions,
