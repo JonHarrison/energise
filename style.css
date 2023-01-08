@@ -90,3 +90,7 @@
   #target {
     width: 345px;
   }
+
+  .hide {
+    display: none;
+  }

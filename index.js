@@ -4,9 +4,13 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+
+let map;
 function initAutocomplete() {
+
     const map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: -33.8688, lng: 151.2195 },
+      center: { lat: 51.5072, lng: 0.1276 },
       zoom: 13,
       mapTypeId: "roadmap",
     });
@@ -73,5 +77,8 @@ function initAutocomplete() {
       map.fitBounds(bounds);
     });
   }
-  
+
   window.initAutocomplete = initAutocomplete;
+
+
+
