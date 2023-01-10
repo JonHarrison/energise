@@ -2,6 +2,12 @@
 // https://developers.google.com/maps/documentation/javascript/examples/map-latlng-literal
 // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox#maps_places_searchbox-html
 
+// logging
+const log_level = 0;
+var log = function () { if (log_level > 0) { console.log.apply(this, arguments); } }
+const error_level = 1;
+var error = function () { if (error_level > 0) { console.error.apply(this, arguments); } }
+
 let map;
 let markers = []; // map markers for EV points
 
@@ -19,7 +25,7 @@ function addEVMarkers(data) {
     null, null, null, new google.maps.Size(30, 30));
 
     data.forEach(function (entry) {
-        console.log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
+        log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
 
         const { AddressInfo, AddressInfo: { Latitude: lat, Longitude: lng },
             ...rest
@@ -69,11 +75,11 @@ function retrieveEVMarkers(geocode)
         return response.json();
     })
     .then(data => {
-        console.log(data)
+        log(data)
         addEVMarkers(data);
     })
     .catch(err => {
-        console.error(err)
+        error(err)
         return err;
     });
 }
@@ -126,13 +132,14 @@ function initAutocomplete() {
         });
         markers = [];
 
+        log(places);
 
         // For each place, get the location / viewport and extend the bounds.
         var geocode;
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
             if (!place.geometry || !place.geometry.location) {
-                console.log("Returned place contains no geometry");
+                error("Returned place contains no geometry");
                 return;
             }
 
