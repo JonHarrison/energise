@@ -102,6 +102,7 @@ function initAutocomplete() {
     const mapOptions = {
         center: { lat: defaultGeocode.lat, lng: defaultGeocode.lon },
         zoom: 14,
+        scaleControl: true,
         styles: mapStyles,
         mapTypeControl: false, // prevent swapping between map and satellite
         mapTypeId: "roadmap" // google.maps.mapTypeId.ROADMAP,
