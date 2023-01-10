@@ -56,6 +56,7 @@ function addEVMarkers(data) {
 
 function retrieveEVMarkers(geocode)
 {
+    const APIKey = 'd3723cbe-33e1-4377-b08c-33f88d7ae336';
     const radius = 10; // miles
     const radiusUnits = 'miles';
     const queryURL = `https://api.openchargemap.io/v3/poi?key={APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}`;
