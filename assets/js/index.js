@@ -3,9 +3,9 @@
 // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox#maps_places_searchbox-html
 
 let map;
-let markers = [];
+let markers = []; // map markers for EV points
 
-const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // London
+const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
 function addEVMarkers(data) {
 
@@ -15,7 +15,7 @@ function addEVMarkers(data) {
     });
     markers = [];
 
-    var icon = new google.maps.MarkerImage('./assets/icons/charging-station-solid.svg',
+    const chargePointIcon = new google.maps.MarkerImage('./assets/icons/charging-station-solid.svg',
     null, null, null, new google.maps.Size(30, 30));
 
     data.forEach(function (entry) {
@@ -31,8 +31,8 @@ function addEVMarkers(data) {
                 // position: new google.maps.LatLng(-34.397, 150.644)
                 position: { lat: lat, lng: lng },
                 map: map,
-                draggable: false,
-                icon: icon,
+                draggable: false, // fixed pin
+                icon: chargePointIcon,
             });
 
         // You can use a LatLng literal in place of a google.maps.LatLng object when
@@ -40,12 +40,12 @@ function addEVMarkers(data) {
         // position will be available as a google.maps.LatLng object. In this case,
         // we retrieve the marker's position using the
         // google.maps.LatLng.getPosition() method.
-        const infowindow = new google.maps.InfoWindow({
+        const infowWndow = new google.maps.InfoWindow({
             content: "<p>Marker Location:" + marker.getPosition() + "</p>",
         });
 
         google.maps.event.addListener(marker, "click", () => {
-            infowindow.open(map, marker);
+            infoWindow.open(map, marker);
         });
 
         markers.push(marker);
@@ -85,7 +85,7 @@ function initAutocomplete() {
             featureType: "poi",
             elementType: "labels",
             stylers: [
-                  { visibility: "off" }
+                  { visibility: "off" } // hide points of interest
             ]
         }
     ];
