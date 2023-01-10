@@ -12,6 +12,7 @@ var error = function () { if (error_level > 0) { console.error.apply(this, argum
 
 let map;
 let markers = []; // map markers for EV points
+let infoWindow;
 
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
@@ -48,12 +49,13 @@ function addEVMarkers(data) {
         // position will be available as a google.maps.LatLng object. In this case,
         // we retrieve the marker's position using the
         // google.maps.LatLng.getPosition() method.
-        const infowWndow = new google.maps.InfoWindow({
-            content: "<p>Marker Location:" + marker.getPosition() + "</p>",
+        infoWindow = new google.maps.InfoWindow({
+          content: "<p>Marker Location:" + marker.getPosition() + "</p>",
         });
 
         google.maps.event.addListener(marker, "click", () => {
-            infoWindow.open(map, marker);
+          infoWindow.close();
+          infoWindow.open(map, marker);
         });
 
         markers.push(marker);
