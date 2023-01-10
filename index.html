@@ -20,8 +20,19 @@
 
 <body>
 
-        <input id="pac-input" class="controls" type="text" placeholder="Search Box" />
-        <div id="map"></div>
+    <div class="pac-card" id="pac-card">
+        <div>
+            <div id="title">Energise</div>
+        </div>
+        <div id="pac-container">
+            <input id="pac-input" class="controls" type="text" placeholder="Search Box" />
+        </div>
+    </div>
+    <div id="map"></div>
+    <div id="infowindow-content">
+        <span id="place-name" class="title"></span><br />
+        <span id="place-address"></span>
+    </div>
 
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
@@ -39,7 +50,7 @@
 
     <!-- Google maps -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
- 
+
     <script type="module" src="./assets/js/index.js"></script>
 
     <!-- 
