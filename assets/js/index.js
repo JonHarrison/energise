@@ -6,6 +6,13 @@
 // https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete#maps_places_autocomplete-html
 // https://developers.google.com/maps/documentation/javascript/controls
 // https://developers.google.com/maps/documentation/javascript/marker-clustering#maps_marker_clustering-html
+// https://developers.google.com/maps/documentation/javascript/infowindows
+// https://support.google.com/fusiontables/answer/171216?hl=en
+// https://codepen.io/MMASK/pen/RVqLoG
+// https://stackoverflow.com/questions/5634991/styling-google-maps-infowindow
+// https://michaelsoriano.com/customize-google-map-info-windows-infobox/
+// https://www.storemapper.com/support/knowledge-base/customize-google-maps-info-window/
+// https://codeshare.co.uk/blog/how-to-style-the-google-maps-popup-infowindow/
 
 // logging
 const log_level = 0;
