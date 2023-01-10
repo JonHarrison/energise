@@ -1,6 +1,7 @@
 // Based on the following examples
 // https://developers.google.com/maps/documentation/javascript/examples/map-latlng-literal
 // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox#maps_places_searchbox-html
+// https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete#maps_places_autocomplete-html
 
 // logging
 const log_level = 0;
@@ -102,6 +103,7 @@ function initAutocomplete() {
         center: { lat: defaultGeocode.lat, lng: defaultGeocode.lon },
         zoom: 14,
         styles: mapStyles,
+        mapTypeControl: false, // prevent swapping between map and satellite
         mapTypeId: "roadmap" // google.maps.mapTypeId.ROADMAP,
     };
 
