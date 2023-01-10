@@ -106,7 +106,7 @@ function initAutocomplete() {
         center: { lat: defaultGeocode.lat, lng: defaultGeocode.lon },
         mapTypeId: "roadmap", // google.maps.mapTypeId.ROADMAP,
         styles: mapStyles,
-        zoom: 14,
+        zoom: 15, // zoom to a scale of 200m per unit
         zoomControl: true,
         fullscreenControl: true,
         mapTypeControl: false, // prevent swapping between map and satellite
