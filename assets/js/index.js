@@ -22,7 +22,7 @@ const error_level = 1;
 var error = function () { if (error_level > 0) { console.error.apply(this, arguments); } }
 
 let map;
-let markers = []; // map markers for EV points
+let markerCluster; // map markers for EV points
 let infoWindow;
 
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
@@ -75,7 +75,7 @@ function addEVMarkers(data) {
   });
 
   // Add a marker clusterer to manage the markers.
-  const markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+  markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
 
   map.fitBounds(bounds); // adjust map to ensure all markers are visible
 
@@ -157,11 +157,8 @@ function initAutocomplete() {
     }
 
     // Clear out the old markers.
-    markers.forEach((marker) => {
-      marker.setMap(null);
-    });
-    markers = [];
-
+    markerCluster.clearMarkers();
+    
     log(places);
 
     var geocode;
