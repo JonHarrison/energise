@@ -2,6 +2,7 @@
 // https://developers.google.com/maps/documentation/javascript/examples/map-latlng-literal
 // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox#maps_places_searchbox-html
 // https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete#maps_places_autocomplete-html
+// https://developers.google.com/maps/documentation/javascript/controls
 
 // logging
 const log_level = 0;
@@ -101,11 +102,15 @@ function initAutocomplete() {
 
     const mapOptions = {
         center: { lat: defaultGeocode.lat, lng: defaultGeocode.lon },
-        zoom: 14,
-        scaleControl: true,
+        mapTypeId: "roadmap", // google.maps.mapTypeId.ROADMAP,
         styles: mapStyles,
+        zoom: 14,
+        zoomControl: true,
+        fullscreenControl: true,
         mapTypeControl: false, // prevent swapping between map and satellite
-        mapTypeId: "roadmap" // google.maps.mapTypeId.ROADMAP,
+        rotateControl: true,
+        scaleControl: true,
+        streetViewControl: true
     };
 
     map = new google.maps.Map(document.getElementById("map"), mapOptions);
