@@ -14,6 +14,7 @@
 // https://www.storemapper.com/support/knowledge-base/customize-google-maps-info-window/
 // https://codeshare.co.uk/blog/how-to-style-the-google-maps-popup-infowindow/
 // https://stackoverflow.com/questions/1556921/google-map-api-v3-set-bounds-and-center
+// https://stackoverflow.com/questions/8229827/update-markercluster-after-removing-markers-from-array
 
 // logging
 const log_level = 0;
