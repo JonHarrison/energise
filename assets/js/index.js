@@ -13,6 +13,7 @@
 // https://michaelsoriano.com/customize-google-map-info-windows-infobox/
 // https://www.storemapper.com/support/knowledge-base/customize-google-maps-info-window/
 // https://codeshare.co.uk/blog/how-to-style-the-google-maps-popup-infowindow/
+// https://stackoverflow.com/questions/1556921/google-map-api-v3-set-bounds-and-center
 
 // logging
 const log_level = 0;
@@ -41,6 +42,9 @@ function addEVMarkers(data) {
     disableAutoPan: true
   });
 
+  // bounds, updated for each marker
+  var bounds = new google.maps.LatLngBounds();
+
   const markers = data.map((entry) => {
     log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
 
@@ -48,12 +52,11 @@ function addEVMarkers(data) {
       ...rest
     } = entry;
 
+    var LatLng = new google.maps.LatLng(lat,lng); //parseFloat(lat), parseFloat(lng));
 
     // Add marker
     const marker = new google.maps.Marker({
-      // The below line is equivalent to writing:
-      // position: new google.maps.LatLng(-34.397, 150.644)
-      position: { lat: lat, lng: lng },
+      position: LatLng,
       //map: map,
       draggable: false, // fixed pin
       icon: chargePointIcon,
@@ -65,12 +68,16 @@ function addEVMarkers(data) {
       infoWindow.open(map, marker);
     });
 
+    bounds.extend(LatLng); // extend bounds to include this marker
+
     return marker;
 
   });
 
   // Add a marker clusterer to manage the markers.
   const markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+
+  map.fitBounds(bounds); // adjust map to ensure all markers are visible
 
 }
 
@@ -157,24 +164,15 @@ function initAutocomplete() {
 
     log(places);
 
-    // For each place, get the location / viewport and extend the bounds.
     var geocode;
-    const bounds = new google.maps.LatLngBounds();
+    // For each place, get the location / viewport to extract the latitude and longitude.
     places.forEach((place) => {
       if (!place.geometry || !place.geometry.location) {
         error("Returned place contains no geometry");
         return;
       }
-
       geocode = { lat: place.geometry.location.lat(), lon: place.geometry.location.lng() };
-      if (place.geometry.viewport) {
-        // Only geocodes have viewport.
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
     });
-    map.fitBounds(bounds); // update the map to the new location
     retrieveEVMarkers(geocode); // get the new EV locations
   });
 
