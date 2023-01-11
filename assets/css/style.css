@@ -94,3 +94,13 @@
   .hide {
     display: none;
   }
+
+  /* Carousel hover captions */
+
+.carousel-caption{
+  opacity:0;
+  transition:500ms ease-in-out;
+}
+.carousel-item:hover .carousel-caption{
+  opacity:1;
+}
