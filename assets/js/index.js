@@ -1,84 +1,179 @@
-// This example adds a search box to a map, using the Google Place Autocomplete
-// feature. People can enter geographical searches. The search box will return a
-// pick list containing a mix of places and predicted search terms.
-// This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+"use strict;"
 
+// Based on the following examples
+// https://developers.google.com/maps/documentation/javascript/examples/map-latlng-literal
+// https://developers.google.com/maps/documentation/javascript/examples/places-searchbox#maps_places_searchbox-html
+// https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete#maps_places_autocomplete-html
+// https://developers.google.com/maps/documentation/javascript/controls
+// https://developers.google.com/maps/documentation/javascript/marker-clustering#maps_marker_clustering-html
+// https://developers.google.com/maps/documentation/javascript/infowindows
+// https://support.google.com/fusiontables/answer/171216?hl=en
+// https://codepen.io/MMASK/pen/RVqLoG
+// https://stackoverflow.com/questions/5634991/styling-google-maps-infowindow
+// https://michaelsoriano.com/customize-google-map-info-windows-infobox/
+// https://www.storemapper.com/support/knowledge-base/customize-google-maps-info-window/
+// https://codeshare.co.uk/blog/how-to-style-the-google-maps-popup-infowindow/
+// https://stackoverflow.com/questions/1556921/google-map-api-v3-set-bounds-and-center
+// https://stackoverflow.com/questions/8229827/update-markercluster-after-removing-markers-from-array
+
+// logging
+const log_level = 0;
+var log = function () { if (log_level > 0) { console.log.apply(this, arguments); } }
+const error_level = 1;
+var error = function () { if (error_level > 0) { console.error.apply(this, arguments); } }
 
 let map;
+let markerCluster; // map markers for EV points
+let infoWindow;
+
+const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
+
+function addEVMarkers(data) {
+
+  const chargePointIcon = new google.maps.MarkerImage('./assets/icons/charging-station-solid.svg',
+    null, null, null, new google.maps.Size(30, 30));
+
+  // You can use a LatLng literal in place of a google.maps.LatLng object when
+  // creating the Marker object. Once the Marker object is instantiated, its
+  // position will be available as a google.maps.LatLng object. In this case,
+  // we retrieve the marker's position using the
+  // google.maps.LatLng.getPosition() method.
+  const infoWindow = new google.maps.InfoWindow({
+    content: "",
+    disableAutoPan: true
+  });
+
+  // bounds, updated for each marker
+  var bounds = new google.maps.LatLngBounds();
+
+  const markers = data.map((entry) => {
+    log(`lat:${entry.AddressInfo.Latitude} lon:${entry.AddressInfo.Longitude} : ${entry.AddressInfo.AddressLine1},${entry.AddressInfo.AddressLine2},${entry.AddressInfo.Postcode}`);
+
+    const { AddressInfo, AddressInfo: { Latitude: lat, Longitude: lng },
+      ...rest
+    } = entry;
+
+    var LatLng = new google.maps.LatLng(lat,lng); //parseFloat(lat), parseFloat(lng));
+
+    // Add marker
+    const marker = new google.maps.Marker({
+      position: LatLng,
+      //map: map,
+      draggable: false, // fixed pin
+      icon: chargePointIcon,
+    });
+
+    marker.addListener("click", () => {
+      infoWindow.close();
+      infoWindow.setContent("<p>Marker Location:" + marker.getPosition() + "</p>");
+      infoWindow.open(map, marker);
+    });
+
+    bounds.extend(LatLng); // extend bounds to include this marker
+
+    return marker;
+
+  });
+
+  // Add a marker clusterer to manage the markers.
+  markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+
+  map.fitBounds(bounds); // adjust map to ensure all markers are visible
+
+}
+
+function retrieveEVMarkers(geocode) {
+  const APIKey = 'd3723cbe-33e1-4377-b08c-33f88d7ae336';
+  const radius = 10; // miles
+  const radiusUnits = 'miles';
+  const client = 'Energise'; // app name
+  const maxResults = 50;
+  const queryURL = `https://api.openchargemap.io/v3/poi?key={APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}&client=${client}&maxresults=${maxResults}`;
+  const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
+  fetch(queryURL, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.error)
+      }
+      return response.json();
+    })
+    .then(data => {
+      log(data)
+      addEVMarkers(data);
+    })
+    .catch(err => {
+      error(err)
+      return err;
+    });
+}
+
 function initAutocomplete() {
 
-    const map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 51.5072, lng: 0.1276 },
-      zoom: 13,
-      mapTypeId: "roadmap",
-    });
-    // Create the search box and link it to the UI element.
-    const input = document.getElementById("pac-input");
-    const searchBox = new google.maps.places.SearchBox(input);
-  
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-    // Bias the SearchBox results towards current map's viewport.
-    map.addListener("bounds_changed", () => {
-      searchBox.setBounds(map.getBounds());
-    });
-  
-    let markers = [];
-  
-    // Listen for the event fired when the user selects a prediction and retrieve
-    // more details for that place.
-    searchBox.addListener("places_changed", () => {
-      const places = searchBox.getPlaces();
-  
-      if (places.length == 0) {
+  const mapStyles = [
+    {
+      featureType: "poi",
+      elementType: "labels",
+      stylers: [
+        { visibility: "off" } // hide points of interest
+      ]
+    }
+  ];
+
+  const mapOptions = {
+    center: { lat: defaultGeocode.lat, lng: defaultGeocode.lon },
+    mapTypeId: "roadmap", // google.maps.mapTypeId.ROADMAP,
+    styles: mapStyles,
+    zoom: 15, // zoom to a scale of 200m per unit
+    zoomControl: true,
+    fullscreenControl: true,
+    mapTypeControl: false, // prevent swapping between map and satellite
+    rotateControl: true,
+    scaleControl: true,
+    streetViewControl: true
+  };
+
+  map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+  retrieveEVMarkers(defaultGeocode);
+
+  // Create the search box and link it to the UI element.
+  const card = document.getElementById("pac-card");
+  const input = document.getElementById("pac-input");
+  const searchBox = new google.maps.places.SearchBox(input);
+
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
+
+  // Bias the SearchBox results towards current map's viewport.
+  map.addListener("bounds_changed", () => {
+    searchBox.setBounds(map.getBounds());
+  });
+
+  // Listen for the event fired when the user selects a prediction and retrieve
+  // more details for that place.
+  searchBox.addListener("places_changed", () => {
+    const places = searchBox.getPlaces();
+
+    if (places.length == 0) {
+      return;
+    }
+
+    // Clear out the old markers.
+    markerCluster.clearMarkers();
+    
+    log(places);
+
+    var geocode;
+    // For each place, get the location / viewport to extract the latitude and longitude.
+    places.forEach((place) => {
+      if (!place.geometry || !place.geometry.location) {
+        error("Returned place contains no geometry");
         return;
       }
-  
-      // Clear out the old markers.
-      markers.forEach((marker) => {
-        marker.setMap(null);
-      });
-      markers = [];
-  
-      // For each place, get the icon, name and location.
-      const bounds = new google.maps.LatLngBounds();
-  
-      places.forEach((place) => {
-        if (!place.geometry || !place.geometry.location) {
-          console.log("Returned place contains no geometry");
-          return;
-        }
-  
-        const icon = {
-          url: place.icon,
-          size: new google.maps.Size(71, 71),
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(17, 34),
-          scaledSize: new google.maps.Size(25, 25),
-        };
-  
-        // Create a marker for each place.
-        markers.push(
-          new google.maps.Marker({
-            map,
-            icon,
-            title: place.name,
-            position: place.geometry.location,
-          })
-        );
-        if (place.geometry.viewport) {
-          // Only geocodes have viewport.
-          bounds.union(place.geometry.viewport);
-        } else {
-          bounds.extend(place.geometry.location);
-        }
-      });
-      map.fitBounds(bounds);
+      geocode = { lat: place.geometry.location.lat(), lon: place.geometry.location.lng() };
     });
-  }
+    retrieveEVMarkers(geocode); // get the new EV locations
+  });
 
-  window.initAutocomplete = initAutocomplete;
+}
 
-
-
+window.initAutocomplete = initAutocomplete;
