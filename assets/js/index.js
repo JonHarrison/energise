@@ -30,6 +30,12 @@ let map;
 let markerCluster; // map markers for EV points
 let infoBubble;
 
+// ###################
+let service;
+let infowindow;
+
+// ###################
+
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
 function addEVMarkers(data) {
@@ -257,10 +263,49 @@ function initAutocomplete() {
         return;
       }
       geocode = { lat: place.geometry.location.lat(), lon: place.geometry.location.lng() };
+// #############################
+/*
+infowindow = new google.maps.InfoWindow();
+
+      var cafeRequest = {
+        location: geocode,
+        radius: '500',
+        type: ['restaurant']
+      };      
+    
+      service = new google.maps.places.PlacesService(map);
+      service.nearbySearch(cafeRequest, callback);
+*/
     });
+
+    //############################
     retrieveEVMarkers(geocode); // get the new EV locations
   });
 
 }
 
 window.initAutocomplete = initAutocomplete;
+
+
+function createCafeMarker(place) {
+  if (!place.geometry || !place.geometry.location) return;
+
+  const marker = new google.maps.Marker({
+    map,
+    position: place.geometry.location,
+  });
+
+  google.maps.event.addListener(marker, "click", () => {
+    infowindow.setContent(place.name || "");
+    infowindow.open(map);
+  });
+}
+
+function callback(results, status) {
+  alert("hhjjh");
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createCafeMarker(results[i]);
+    }
+  }
+}
