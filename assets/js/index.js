@@ -28,13 +28,10 @@ var error = function () { if (error_level > 0) { console.error.apply(this, argum
 
 let map;
 let markerCluster; // map markers for EV points
+let coffeeMarkers = []; // array for coffee shop markers (so that the can be removed)
 let infoBubble;
-
-// ###################
+let infoWindow;
 let service;
-let infowindow;
-
-// ###################
 
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
@@ -77,17 +74,18 @@ function addEVMarkers(data) {
       Connections: { ID: id, ConnectionType, Quantity: qty },
       UsageCost: cost,
       DateLastVerified: verified,
-      OperatorInfo: { ContactEmail : opEmail, PhonePrimaryContact: opPhone, WebsiteURL : opURL, Title: opTitle },
+      OperatorInfo: { ContactEmail: opEmail, PhonePrimaryContact: opPhone, WebsiteURL: opURL, Title: opTitle },
       ...rest
     } = entry || {};
     // need to handle fields which may be null separately
     const operational = (entry.StatusType && entry.StatusType.Title !== null) ? entry.StatusType.Title : 'Undefined';
-  
+
     var LatLng = new google.maps.LatLng(lat, lng); //parseFloat(lat), parseFloat(lng));
 
     // Add marker
     const marker = new google.maps.Marker({
       position: LatLng,
+      animation: google.maps.Animation.DROP,
       //map: map,
       draggable: false, // fixed pin
       icon: chargePointIcon,
@@ -96,35 +94,35 @@ function addEVMarkers(data) {
     marker.addListener("click", () => {
 
       const utcToLocal = (utc) => { var utcDate = new Date(verified); return utcDate.toLocaleDateString(); }
-      const elmToString = (tag,value,nullStr="") => {
+      const elmToString = (tag, value, nullStr = "") => {
         return (value !== null) ? `<${tag}>${value}</${tag}>` : nullStr;
       }
 
       const addressElement = () => {
-        var html = 
-        elmToString('p', ad1) +
-        elmToString('p', ad2) +
-        elmToString('p', ad3) +
-        elmToString('p', `(LAT:${lat.toFixed(4)},LON:${lng.toFixed(4)})`) +
-        '<hr>'; 
+        var html =
+          elmToString('p', ad1) +
+          elmToString('p', ad2) +
+          elmToString('p', ad3) +
+          elmToString('p', `(LAT:${lat.toFixed(4)},LON:${lng.toFixed(4)})`) +
+          '<hr>';
         return html;
       }
 
       const statusElement = () => {
-        return (entry.StatusType !== null) ? (`<p>${entry.StatusType.Title}<p>${utcToLocal(verified)}<hr>`) : ('<p>UNVERIFIED</p><hr>') ;
+        return (entry.StatusType !== null) ? (`<p>${entry.StatusType.Title}<p>${utcToLocal(verified)}<hr>`) : ('<p>UNVERIFIED</p><hr>');
       }
 
       const costElement = () => {
-        var html = 
-        elmToString('p', cost) +
-        '<hr>';
+        var html =
+          elmToString('p', cost) +
+          '<hr>';
         return html;
       }
 
       const contactElement = () => {
-        var html = 
-        elmToString('p', opTitle) +
-        elmToString('p', opPhone);
+        var html =
+          elmToString('p', opTitle) +
+          elmToString('p', opPhone);
         html += (opEmail !== null) ? `<p><a href="mailto:${opEmail}">${opEmail}</a></p>` : "";
         html += (opURL !== null) ? `<p><a href="${opURL}">${opURL}</a></p>` : "";
         html += '<hr>';
@@ -134,13 +132,13 @@ function addEVMarkers(data) {
       var locationTab =
         '<div id="locationTab" class="infotab iw-container">' +
         // '<div class="iw-title">Location</div>' +
-          '<div class="iw-content">' +
-          `<div class="iw-subTitle">${addTitle}</div>` +
-            addressElement() + 
-            statusElement() +
-            costElement() +
-            contactElement() +
-          '</div>' +
+        '<div class="iw-content">' +
+        `<div class="iw-subTitle">${addTitle}</div>` +
+        addressElement() +
+        statusElement() +
+        costElement() +
+        contactElement() +
+        '</div>' +
         '</div>';
 
       var chargerTab = [
@@ -149,7 +147,7 @@ function addEVMarkers(data) {
         '<p>Charger details</p>',
         '</div>',
       ].join('');
-      
+
       infoBubble.position = LatLng;
 
       // clear existing tabs first to avoid duplication
@@ -158,7 +156,7 @@ function addEVMarkers(data) {
 
       infoBubble.addTab('Location', locationTab);
       infoBubble.addTab('Charger', chargerTab);
-      
+
       infoBubble.open(map, marker);
     });
 
@@ -200,6 +198,78 @@ function retrieveEVMarkers(geocode) {
     });
 }
 
+function createCafeMarker(place) {
+  if (!place.geometry || !place.geometry.location) return;
+
+  var markerImage = {
+    url: place.icon_mask_base_uri + '.svg',
+    scaledSize: new google.maps.Size(30, 30)
+  };
+  const marker = new google.maps.Marker({
+    map,
+    position: place.geometry.location,
+    animation: google.maps.Animation.DROP,
+    icon: markerImage
+  });
+
+  coffeeMarkers.push(marker); // record marker so that it can be cleared if the search location changes
+
+  marker.addListener("click", () => {
+    infoWindow.setContent(place.name || "");
+    infoWindow.open(map, marker);
+  });
+}
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createCafeMarker(results[i]);
+    }
+  }
+}
+
+function retrieveCafeMarkers(geocode) {
+
+  var LatLng = new google.maps.LatLng(geocode.lat, geocode.lon); //parseFloat(lat), parseFloat(lng));
+
+  var cafeRequest = {
+    // bounds: map.getBounds(),
+    location: LatLng,
+    radius: '16093.4', // 10 miles in meters
+  };
+
+  // need to do search in multiple requests as you can only search for one item at a time
+  var queries = [ 'coffee shop', 'cafe', 'coffee'];
+  queries.forEach((query) => {
+    cafeRequest.query = query;
+    service.textSearch(cafeRequest, callback);
+  });
+
+  // finally search by type
+  cafeRequest.query = "";
+  cafeRequest.type = ["cafe"];
+  service.textSearch(cafeRequest, callback);
+
+}
+
+function addMarkers(geocode) {
+  retrieveEVMarkers(defaultGeocode);
+  retrieveCafeMarkers(defaultGeocode);
+}
+
+function clearMarkers() {
+  // Clear out the old markers.
+  markerCluster.clearMarkers();
+
+  for (let i = 0; i < coffeeMarkers.length; i++) {
+    if (coffeeMarkers[i]) {
+      coffeeMarkers[i].setMap(null);
+    }
+  }
+
+  coffeeMarkers = [];
+}
+
 function initAutocomplete() {
 
   const mapStyles = [
@@ -227,7 +297,11 @@ function initAutocomplete() {
 
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-  retrieveEVMarkers(defaultGeocode);
+  infoWindow = new google.maps.InfoWindow({ content: "", disableAutoPan: true });
+
+  service = new google.maps.places.PlacesService(map); // places search service
+
+  addMarkers(defaultGeocode);
 
   // Create the search box and link it to the UI element.
   const card = document.getElementById("pac-card");
@@ -250,8 +324,7 @@ function initAutocomplete() {
       return;
     }
 
-    // Clear out the old markers.
-    markerCluster.clearMarkers();
+    clearMarkers();
 
     log(places);
 
@@ -263,49 +336,12 @@ function initAutocomplete() {
         return;
       }
       geocode = { lat: place.geometry.location.lat(), lon: place.geometry.location.lng() };
-// #############################
-/*
-infowindow = new google.maps.InfoWindow();
-
-      var cafeRequest = {
-        location: geocode,
-        radius: '500',
-        type: ['restaurant']
-      };      
-    
-      service = new google.maps.places.PlacesService(map);
-      service.nearbySearch(cafeRequest, callback);
-*/
     });
 
-    //############################
-    retrieveEVMarkers(geocode); // get the new EV locations
+    addMarkers(geocode);
+
   });
 
 }
 
 window.initAutocomplete = initAutocomplete;
-
-
-function createCafeMarker(place) {
-  if (!place.geometry || !place.geometry.location) return;
-
-  const marker = new google.maps.Marker({
-    map,
-    position: place.geometry.location,
-  });
-
-  google.maps.event.addListener(marker, "click", () => {
-    infowindow.setContent(place.name || "");
-    infowindow.open(map);
-  });
-}
-
-function callback(results, status) {
-  alert("hhjjh");
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    for (var i = 0; i < results.length; i++) {
-      createCafeMarker(results[i]);
-    }
-  }
-}
