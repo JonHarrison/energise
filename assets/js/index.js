@@ -7,14 +7,18 @@
 // https://developers.google.com/maps/documentation/javascript/controls
 // https://developers.google.com/maps/documentation/javascript/marker-clustering#maps_marker_clustering-html
 // https://developers.google.com/maps/documentation/javascript/infowindows
+// https://github.com/googlearchive/js-info-bubble
+// https://stackoverflow.com/questions/1556921/google-map-api-v3-set-bounds-and-center
+// https://stackoverflow.com/questions/8229827/update-markercluster-after-removing-markers-from-array
+// https://stackoverflow.com/questions/3994606/how-to-add-tabs-to-infowindow-which-uses-extinfowindows-for-google-map
+// https://stackoverflow.com/questions/5177705/google-maps-infowindow-not-showing-the-tabs-as-it-should
+// https://stackoverflow.com/questions/5634991/styling-google-maps-infowindow
 // https://support.google.com/fusiontables/answer/171216?hl=en
 // https://codepen.io/MMASK/pen/RVqLoG
-// https://stackoverflow.com/questions/5634991/styling-google-maps-infowindow
 // https://michaelsoriano.com/customize-google-map-info-windows-infobox/
 // https://www.storemapper.com/support/knowledge-base/customize-google-maps-info-window/
 // https://codeshare.co.uk/blog/how-to-style-the-google-maps-popup-infowindow/
-// https://stackoverflow.com/questions/1556921/google-map-api-v3-set-bounds-and-center
-// https://stackoverflow.com/questions/8229827/update-markercluster-after-removing-markers-from-array
+// https://codepen.io/deand/pen/qEGXmV
 
 // logging
 const log_level = 0;
@@ -24,7 +28,7 @@ var error = function () { if (error_level > 0) { console.error.apply(this, argum
 
 let map;
 let markerCluster; // map markers for EV points
-let infoWindow;
+let infoBubble;
 
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
@@ -33,15 +37,27 @@ function addEVMarkers(data) {
   const chargePointIcon = new google.maps.MarkerImage('./assets/icons/charging-station-solid.svg',
     null, null, null, new google.maps.Size(30, 30));
 
-  // You can use a LatLng literal in place of a google.maps.LatLng object when
-  // creating the Marker object. Once the Marker object is instantiated, its
-  // position will be available as a google.maps.LatLng object. In this case,
-  // we retrieve the marker's position using the
-  // google.maps.LatLng.getPosition() method.
-  const infoWindow = new google.maps.InfoWindow({
-    content: "",
-    disableAutoPan: true
+  const infoBubble = new InfoBubble({
+    map: map,
+    content: '<div class="infotext">Some label</div>',
+    // position: LatLng,
+    shadowStyle: 1,
+    padding: 10,
+    borderRadius: 5,
+    minHeight: 300,
+    // maxHeight: 300,
+    minWidth: 200,
+    // maxWidth: 200,
+    arrowSize: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    disableAutoPan: true,
+    hideCloseButton: false,
+    arrowPosition: 30,
+    backgroundClassName: 'info',
+    arrowStyle: 0
   });
+
 
   // bounds, updated for each marker
   var bounds = new google.maps.LatLngBounds();
@@ -53,7 +69,7 @@ function addEVMarkers(data) {
       ...rest
     } = entry;
 
-    var LatLng = new google.maps.LatLng(lat,lng); //parseFloat(lat), parseFloat(lng));
+    var LatLng = new google.maps.LatLng(lat, lng); //parseFloat(lat), parseFloat(lng));
 
     // Add marker
     const marker = new google.maps.Marker({
@@ -64,9 +80,34 @@ function addEVMarkers(data) {
     });
 
     marker.addListener("click", () => {
-      infoWindow.close();
-      infoWindow.setContent("<p>Marker Location:" + marker.getPosition() + "</p>");
-      infoWindow.open(map, marker);
+
+      var locationTab = [
+        '<div id="locationTab" class="infotab iw-container">',
+        '  <div class="iw-title">Location</div>',
+        '  <div class="iw-content">',
+        '    <div class="iw-subTitle">Sub Title</div>',
+        '    <p>' + marker.getPosition() + '</p>',
+        '  </div>',
+        '</div>',
+      ].join('');
+
+      var chargerTab = [
+        '<div id="chargerTab">',
+        '<h4>Charger details</h4>',
+        '<p>Charger details</p>',
+        '</div>',
+      ].join('');
+      
+      infoBubble.position = LatLng;
+
+      // clear existing tabs first to avoid duplication
+      infoBubble.removeTab(1);
+      infoBubble.removeTab(0);
+
+      infoBubble.addTab('Location', locationTab);
+      infoBubble.addTab('Charger', chargerTab);
+      
+      infoBubble.open(map, marker);
     });
 
     bounds.extend(LatLng); // extend bounds to include this marker
@@ -159,7 +200,7 @@ function initAutocomplete() {
 
     // Clear out the old markers.
     markerCluster.clearMarkers();
-    
+
     log(places);
 
     var geocode;
