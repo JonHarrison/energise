@@ -93,7 +93,7 @@ function addEVMarkers(data) {
       const elmToString = (tag,value,nullStr="") => {
         return (value !== null) ? `<${tag}>${value}</${tag}>` : nullStr;
       }
-      
+
       const addressElement = () => {
         var html = 
         elmToString('p', ad1) +
@@ -118,10 +118,10 @@ function addEVMarkers(data) {
       const contactElement = () => {
         var html = 
         elmToString('p', opTitle) +
-        elmToString('p', opPhone) +
-        elmToString('p', opEmail) +
-        elmToString('p', opURL) +
-        '<hr>';
+        elmToString('p', opPhone);
+        html += (opEmail !== null) ? `<p><a href="mailto:${opEmail}">${opEmail}</a></p>` : "";
+        html += (opURL !== null) ? `<p><a href="${opURL}">${opURL}</a></p>` : "";
+        html += '<hr>';
         return html;
       }
 
