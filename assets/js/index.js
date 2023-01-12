@@ -130,7 +130,7 @@ function addEVMarkers(data) {
         entry.Connections.forEach((connection) => {
           html += `<p>ID  : ${connection.ID}</p>`;
           html += `<p>${connection.ConnectionType.FormalName}</p>`;
-          if (connection.Quantity !== null) {
+          if (connection.Quantity !== null && connection.PowerKW !== null) {
             html += `<p>${connection.Quantity} x ${connection.PowerKW}kW</p>`;
           }
           else if (connection.PowerKW !== null) {
