@@ -162,6 +162,8 @@ function addEVMarkers(data) {
 
     bounds.extend(LatLng); // extend bounds to include this marker
 
+    retrieveCafeMarkers(LatLng);
+
     return marker;
 
   });
@@ -207,8 +209,8 @@ function createCafeMarker(place) {
   };
 
   var logos = [
-    { 'id':'costa',     'img':"./assets/icons/Costa_Coffee_logo_logotype.png"},
-    { 'id':'starbucks', 'img':"./assets/icons/Starbucks_Corporation_Logo_2011.svg" },
+    { 'id':'costa',         'img':"./assets/icons/Costa_Coffee_logo_logotype.png"},
+    { 'id':'starbucks',     'img':"./assets/icons/Starbucks_Corporation_Logo_2011.svg" },
     { 'id':'origin',        'img':"./assets/icons/logo-origin-coffee-roasters-300x121.png"},
     { 'id':'coffee island', 'img':"./assets/icons/coffee_island.png"},
     { 'id':'caffè nero',    'img':"./assets/icons/caffenero-logo_black_gold.png"},
@@ -254,14 +256,12 @@ function callback(results, status) {
   }
 }
 
-function retrieveCafeMarkers(geocode) {
-
-  var LatLng = new google.maps.LatLng(geocode.lat, geocode.lon); //parseFloat(lat), parseFloat(lng));
+function retrieveCafeMarkers(LatLng) {
 
   var cafeRequest = {
     // bounds: map.getBounds(),
     location: LatLng,
-    radius: '16093.4', // 10 miles in meters
+    radius: 500, // metres
   };
 
   // need to do search in multiple requests as you can only search for one item at a time
@@ -279,8 +279,7 @@ function retrieveCafeMarkers(geocode) {
 }
 
 function addMarkers(geocode) {
-  retrieveEVMarkers(defaultGeocode);
-  retrieveCafeMarkers(defaultGeocode);
+  retrieveEVMarkers(geocode);
 }
 
 function clearMarkers() {
