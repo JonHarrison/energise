@@ -208,9 +208,9 @@ function createCafeMarker(place) {
     scaledSize: new google.maps.Size(30, 30)
   };
 
-  var pathRoot = "./assets/icons/";
+  const pathRoot = "./assets/icons/";
 
-  var logos = [
+  const logos = [
     { 'id':'costa',           'img':"Costa_Coffee_logo_logotype.png"},
     { 'id':'starbucks',       'img':"Starbucks_Corporation_Logo_2011.svg" },
     { 'id':'origin',          'img':"logo-origin-coffee-roasters-300x121.png"},
