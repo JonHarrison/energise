@@ -49,6 +49,8 @@
       /* max-height: 140px; */
       overflow-y: auto;
       overflow-x: hidden;
+      color: white;
+      background-color: rgba(176, 176, 176, 0.7);
   }
 
   .iw-content p {
