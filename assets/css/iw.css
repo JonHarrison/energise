@@ -49,6 +49,8 @@
       /* max-height: 140px; */
       overflow-y: auto;
       overflow-x: hidden;
+      color: white;
+      background-color: rgba(176, 176, 176, 0.7);
   }
 
   .iw-content p {
@@ -77,3 +79,4 @@
       background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
       background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
   }
+  

@@ -74,12 +74,12 @@ function addEVMarkers(data) {
       Connections: { ID: id, ConnectionType, Quantity: qty },
       UsageCost: cost,
       DateLastVerified: verified,
-      OperatorInfo: { ContactEmail : opEmail, PhonePrimaryContact: opPhone, WebsiteURL : opURL, Title: opTitle },
+      OperatorInfo: { ContactEmail: opEmail, PhonePrimaryContact: opPhone, WebsiteURL: opURL, Title: opTitle },
       ...rest
     } = entry || {};
     // need to handle fields which may be null separately
     const operational = (entry.StatusType && entry.StatusType.Title !== null) ? entry.StatusType.Title : 'Undefined';
-  
+
     var LatLng = new google.maps.LatLng(lat, lng); //parseFloat(lat), parseFloat(lng));
 
     // Add marker
@@ -94,60 +94,83 @@ function addEVMarkers(data) {
     marker.addListener("click", () => {
 
       const utcToLocal = (utc) => { var utcDate = new Date(verified); return utcDate.toLocaleDateString(); }
-      const elmToString = (tag,value,nullStr="") => {
+      const elmToString = (tag, value, nullStr = "") => {
         return (value !== null) ? `<${tag}>${value}</${tag}>` : nullStr;
       }
 
       const addressElement = () => {
-        var html = 
-        elmToString('p', ad1) +
-        elmToString('p', ad2) +
-        elmToString('p', ad3) +
-        elmToString('p', `(LAT:${lat.toFixed(4)},LON:${lng.toFixed(4)})`) +
-        '<hr>'; 
+        var html =
+          elmToString('p', ad1) +
+          elmToString('p', ad2) +
+          elmToString('p', ad3) +
+          elmToString('p', `(LAT:${lat.toFixed(4)},LON:${lng.toFixed(4)})`) +
+          '<hr>';
         return html;
       }
 
       const statusElement = () => {
-        return (entry.StatusType !== null) ? (`<p>${entry.StatusType.Title}<p>${utcToLocal(verified)}<hr>`) : ('<p>UNVERIFIED</p><hr>') ;
+        return (entry.StatusType !== null) ? (`<p>${entry.StatusType.Title}<p>${utcToLocal(verified)}<hr>`) : ('<p>UNVERIFIED</p><hr>');
       }
 
       const costElement = () => {
-        var html = 
-        elmToString('p', cost) +
-        '<hr>';
+        var html =
+          elmToString('p', cost) +
+          '<hr>';
         return html;
       }
 
       const contactElement = () => {
-        var html = 
-        elmToString('p', opTitle) +
-        elmToString('p', opPhone);
+        var html =
+          elmToString('p', opTitle) +
+          elmToString('p', opPhone);
         html += (opEmail !== null) ? `<p><a href="mailto:${opEmail}">${opEmail}</a></p>` : "";
         html += (opURL !== null) ? `<p><a href="${opURL}">${opURL}</a></p>` : "";
         html += '<hr>';
         return html;
       }
 
+      const connectionElement = () => {
+        var html = "";
+        entry.Connections.forEach((connection) => {
+          html += `<p>ID  : ${connection.ID}</p>`;
+          html += `<p>${connection.ConnectionType.FormalName}</p>`;
+          if (connection.Quantity !== null && connection.PowerKW !== null) {
+            html += `<p>${connection.Quantity} x ${connection.PowerKW}kW</p>`;
+          }
+          else if (connection.PowerKW !== null) {
+            html += `<p>${connection.PowerKW}kW</p>`;
+          }
+          if (connection.StatusType !== null) {
+            if (connection.StatusType.IsOperational) {
+              html += '<p><i class="fa-solid fa-circle-check"></i></p>';
+            }
+          }
+          html += '<hr>';
+         })
+        return html;
+      }
+
       var locationTab =
         '<div id="locationTab" class="infotab iw-container">' +
         // '<div class="iw-title">Location</div>' +
-          '<div class="iw-content">' +
-          `<div class="iw-subTitle">${addTitle}</div>` +
-            addressElement() + 
-            statusElement() +
-            costElement() +
-            contactElement() +
-          '</div>' +
+        '  <div class="iw-content">' +
+        `    <div class="iw-subTitle">${addTitle}</div>` +
+             addressElement() +
+             statusElement() +
+             costElement() +
+             contactElement() +
+        '  </div>' +
         '</div>';
 
-      var chargerTab = [
-        '<div id="chargerTab">',
-        '<h4>Charger details</h4>',
-        '<p>Charger details</p>',
-        '</div>',
-      ].join('');
-      
+      var chargerTab =
+        '<div id="chargerTab" class="infotab iw-container">' +
+        '  <div class="iw-content">' +
+        `    <div class="iw-subTitle">Connections</div>` +
+        '    <hr>' +
+             connectionElement() +
+        '  </div>' +
+        '</div>';
+
       infoBubble.position = LatLng;
 
       // clear existing tabs first to avoid duplication
@@ -156,7 +179,7 @@ function addEVMarkers(data) {
 
       infoBubble.addTab('Location', locationTab);
       infoBubble.addTab('Charger', chargerTab);
-      
+
       infoBubble.open(map, marker);
     });
 
