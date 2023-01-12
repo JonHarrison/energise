@@ -205,6 +205,25 @@ function createCafeMarker(place) {
     url: place.icon_mask_base_uri + '.svg',
     scaledSize: new google.maps.Size(30, 30)
   };
+
+  var logos = [
+    { 'id':'costa',     'img':"./assets/icons/Costa_Coffee_logo_logotype.png"},
+    { 'id':'starbucks', 'img':"./assets/icons/Starbucks_Corporation_Logo_2011.svg" },
+    { 'id':'origin',    'img':"./assets/icons/logo-origin-coffee-roasters-300x121.png"}
+  ];
+
+  let found = false;
+
+  for (let logo of logos) {
+    if (place.name.toLowerCase().includes(logo.id)) {
+      markerImage.url = logo.img;
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) console.log(place.name);
+  
   const marker = new google.maps.Marker({
     map,
     position: place.geometry.location,
