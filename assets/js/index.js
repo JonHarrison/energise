@@ -208,31 +208,34 @@ function createCafeMarker(place) {
     scaledSize: new google.maps.Size(30, 30)
   };
 
+  var pathRoot = "./assets/icons/";
+
   var logos = [
-    { 'id':'costa',         'img':"./assets/icons/Costa_Coffee_logo_logotype.png"},
-    { 'id':'starbucks',     'img':"./assets/icons/Starbucks_Corporation_Logo_2011.svg" },
-    { 'id':'origin',        'img':"./assets/icons/logo-origin-coffee-roasters-300x121.png"},
-    { 'id':'coffee island', 'img':"./assets/icons/coffee_island.png"},
-    { 'id':'caffè nero',    'img':"./assets/icons/caffenero-logo_black_gold.png"},
-    { 'id':'caffe nero',    'img':"./assets/icons/caffenero-logo_black_gold.png"},
+    { 'id':'costa',           'img':"Costa_Coffee_logo_logotype.png"},
+    { 'id':'starbucks',       'img':"Starbucks_Corporation_Logo_2011.svg" },
+    { 'id':'origin',          'img':"logo-origin-coffee-roasters-300x121.png"},
+    { 'id':'coffee island',   'img':"Coffee_island_logo_2019.jpg"},
+    { 'id':'caffè nero',      'img':"caffenero-logo_black_gold.png"},
+    { 'id':'caffe nero',      'img':"caffenero-logo_black_gold.png"},
+    { 'id':'coffee republic', 'img':"coffee-republic.png"},
+    { 'id':'pret a manger',   'img':"pret-a-manger.png" },
     // Caffe 82
     // 49 Cafe
     // Caffe in
-    // coffee island
   ];
 
   let found = false;
 
   for (let logo of logos) {
     if (place.name.toLowerCase().includes(logo.id)) {
-      markerImage.url = logo.img;
+      markerImage.url = pathRoot + logo.img;
       found = true;
       break;
     }
   }
 
   if (!found) console.log(place.name);
-  
+
   const marker = new google.maps.Marker({
     map,
     position: place.geometry.location,
@@ -265,7 +268,7 @@ function retrieveCafeMarkers(LatLng) {
   };
 
   // need to do search in multiple requests as you can only search for one item at a time
-  var queries = [ 'Caffe Nero', 'Caffè Nero', 'Starbucks', 'Costa', 'Origin Coffee', 'coffee shop', 'cafe', 'coffee' ]; 
+  var queries = [ 'Caffe Nero', 'Caffè Nero', 'Starbucks', 'Costa', 'Origin Coffee', 'Coffee Republic', 'Pret a Manger', 'Coffee Island', 'coffee shop', 'cafe', 'coffee' ]; 
   queries.forEach((query) => {
     cafeRequest.query = query;
     service.textSearch(cafeRequest, callback);
