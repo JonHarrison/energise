@@ -209,7 +209,14 @@ function createCafeMarker(place) {
   var logos = [
     { 'id':'costa',     'img':"./assets/icons/Costa_Coffee_logo_logotype.png"},
     { 'id':'starbucks', 'img':"./assets/icons/Starbucks_Corporation_Logo_2011.svg" },
-    { 'id':'origin',    'img':"./assets/icons/logo-origin-coffee-roasters-300x121.png"}
+    { 'id':'origin',        'img':"./assets/icons/logo-origin-coffee-roasters-300x121.png"},
+    { 'id':'coffee island', 'img':"./assets/icons/coffee_island.png"},
+    { 'id':'caffè nero',    'img':"./assets/icons/caffenero-logo_black_gold.png"},
+    { 'id':'caffe nero',    'img':"./assets/icons/caffenero-logo_black_gold.png"},
+    // Caffe 82
+    // 49 Cafe
+    // Caffe in
+    // coffee island
   ];
 
   let found = false;
@@ -258,7 +265,7 @@ function retrieveCafeMarkers(geocode) {
   };
 
   // need to do search in multiple requests as you can only search for one item at a time
-  var queries = [ 'coffee shop', 'cafe', 'coffee'];
+  var queries = [ 'Caffe Nero', 'Caffè Nero', 'Starbucks', 'Costa', 'Origin Coffee', 'coffee shop', 'cafe', 'coffee' ]; 
   queries.forEach((query) => {
     cafeRequest.query = query;
     service.textSearch(cafeRequest, callback);
