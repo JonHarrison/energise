@@ -1,3 +1,13 @@
+/* override standard navbar to fix at top of window */
+.navbar {
+  position: fixed;
+  width: 100%;
+  /* background: url("../images/transparency.png"); */
+  /* background-color: transparent !important; */
+  /* background-size: cover; */
+  z-index: 10;
+}
+
 /* Carousel hover captions */
 
 .carousel-caption {
