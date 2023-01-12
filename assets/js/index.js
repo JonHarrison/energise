@@ -253,8 +253,8 @@ function retrieveCafeMarkers(geocode) {
 }
 
 function addMarkers(geocode) {
-  retrieveEVMarkers(defaultGeocode);
-  retrieveCafeMarkers(defaultGeocode);
+  retrieveEVMarkers(geocode);
+  retrieveCafeMarkers(geocode);
 }
 
 function clearMarkers() {
