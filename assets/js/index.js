@@ -28,7 +28,10 @@ var error = function () { if (error_level > 0) { console.error.apply(this, argum
 
 let map;
 let markerCluster; // map markers for EV points
+let coffeeMarkers = []; // array for coffee shop markers (so that the can be removed)
 let infoBubble;
+let infoWindow;
+let service;
 
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
@@ -82,6 +85,7 @@ function addEVMarkers(data) {
     // Add marker
     const marker = new google.maps.Marker({
       position: LatLng,
+      animation: google.maps.Animation.DROP,
       //map: map,
       draggable: false, // fixed pin
       icon: chargePointIcon,
@@ -194,6 +198,78 @@ function retrieveEVMarkers(geocode) {
     });
 }
 
+function createCafeMarker(place) {
+  if (!place.geometry || !place.geometry.location) return;
+
+  var markerImage = {
+    url: place.icon_mask_base_uri + '.svg',
+    scaledSize: new google.maps.Size(30, 30)
+  };
+  const marker = new google.maps.Marker({
+    map,
+    position: place.geometry.location,
+    animation: google.maps.Animation.DROP,
+    icon: markerImage
+  });
+
+  coffeeMarkers.push(marker); // record marker so that it can be cleared if the search location changes
+
+  marker.addListener("click", () => {
+    infoWindow.setContent(`<p>${place.name}</p><p>${place.formatted_address}</p>`);
+    infoWindow.open(map, marker);
+  });
+}
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createCafeMarker(results[i]);
+    }
+  }
+}
+
+function retrieveCafeMarkers(geocode) {
+
+  var LatLng = new google.maps.LatLng(geocode.lat, geocode.lon); //parseFloat(lat), parseFloat(lng));
+
+  var cafeRequest = {
+    // bounds: map.getBounds(),
+    location: LatLng,
+    radius: '16093.4', // 10 miles in meters
+  };
+
+  // need to do search in multiple requests as you can only search for one item at a time
+  var queries = [ 'coffee shop', 'cafe', 'coffee'];
+  queries.forEach((query) => {
+    cafeRequest.query = query;
+    service.textSearch(cafeRequest, callback);
+  });
+
+  // finally search by type
+  cafeRequest.query = "";
+  cafeRequest.type = ["cafe"];
+  service.textSearch(cafeRequest, callback);
+
+}
+
+function addMarkers(geocode) {
+  retrieveEVMarkers(geocode);
+  retrieveCafeMarkers(geocode);
+}
+
+function clearMarkers() {
+  // Clear out the old markers.
+  markerCluster.clearMarkers();
+
+  for (let i = 0; i < coffeeMarkers.length; i++) {
+    if (coffeeMarkers[i]) {
+      coffeeMarkers[i].setMap(null);
+    }
+  }
+
+  coffeeMarkers = [];
+}
+
 function initAutocomplete() {
 
   const mapStyles = [
@@ -221,7 +297,11 @@ function initAutocomplete() {
 
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-  retrieveEVMarkers(defaultGeocode);
+  infoWindow = new google.maps.InfoWindow({ content: "", disableAutoPan: true });
+
+  service = new google.maps.places.PlacesService(map); // places search service
+
+  addMarkers(defaultGeocode);
 
   // Create the search box and link it to the UI element.
   const card = document.getElementById("pac-card");
@@ -244,8 +324,7 @@ function initAutocomplete() {
       return;
     }
 
-    // Clear out the old markers.
-    markerCluster.clearMarkers();
+    clearMarkers();
 
     log(places);
 
@@ -258,7 +337,9 @@ function initAutocomplete() {
       }
       geocode = { lat: place.geometry.location.lat(), lon: place.geometry.location.lng() };
     });
-    retrieveEVMarkers(geocode); // get the new EV locations
+
+    addMarkers(geocode);
+
   });
 
 }
