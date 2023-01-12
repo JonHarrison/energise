@@ -215,7 +215,7 @@ function createCafeMarker(place) {
   coffeeMarkers.push(marker); // record marker so that it can be cleared if the search location changes
 
   marker.addListener("click", () => {
-    infoWindow.setContent(place.name || "");
+    infoWindow.setContent(`<p>${place.name}</p><p>${place.formatted_address}</p>`);
     infoWindow.open(map, marker);
   });
 }
