@@ -2,6 +2,37 @@
  * Always set the map height explicitly to define the size of the div element
  * that contains the map. 
  */
+
+ /** * * * * * * * * * Start of Header * * * * * * * * * */
+body {
+  background-color: rgb(69, 70, 69);
+}
+
+.jumbotron-fluid {
+  padding: 20px; 
+  font-size: 20px; 
+  background-color: rgb(22, 21, 21);
+  border-bottom: rgb(228, 70, 8) solid 1px;
+}
+
+.display-2 {
+  color:rgba(4, 230, 230, 0.877);
+}
+
+.nav-item {
+  padding-right: 10px;
+  padding-top: 20px;
+}
+
+.form-inline {
+  padding-top: 20px;
+}
+
+.btn {
+  color: rgb(226, 223, 223);
+  border-color: rgba(44, 43, 43, 0.877);
+}
+/* * * * * * * * * * * * * * * * * * * * * End of Header * * * * * * * * * **/
  #map {
     height: 100%;
     background-color: grey;
