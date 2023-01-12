@@ -6,6 +6,22 @@ once the place is selected from the drop dowm, list map will be centered around 
 each locations can be clicked to get the details in a pop-up window
 
 
+### User Story
+
+```
+AS A Green Commuter and A coffee lover 
+I WANT to locate all the electric car charging points near to my location
+Also as I also want to find the nearby coffee shops where I can have coffee while my car is getting charged
+SO THAT I can re-fuel my car conveniently and also enjoy my favorite cuppa while waiting
+```
+
+### Resources:
+
+* [Google Maps API ](https://developers.google.com/maps)
+* [Google Maps API documentation ](https://developers.google.com/maps/documentation)
+* [Electric charging point locations - OpenchargeMap API](https://openchargemap.org/site/develop#api)
+
+
 ### Github URL 
 
 https://github.com/JonHarrison/energise
@@ -15,7 +31,7 @@ https://github.com/JonHarrison/energise
 The deployed application can be accessed using below URL 
 
 
-### Screenshots
+### Mock-Up
 
 The home page of Energise website
 ![The home page of Energise website .](images/homepage.png)
