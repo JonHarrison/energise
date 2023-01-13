@@ -81,9 +81,9 @@ Coffee shop details
 * [Link to the deployed website](https://jonharrison.github.io/energise/)
 * [Link to the code repository](https://github.com/JonHarrison/energise)
 
-## Wifi
+## Wiki
 
-* The project WiKi is available [here](https://github.com/JonHarrison/energise/wiki)
+* The project Wiki is available [here](https://github.com/JonHarrison/energise/wiki)
 
 ## External Resources
 
