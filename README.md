@@ -81,7 +81,11 @@ Coffee shop details
 * [Link to the deployed website](https://jonharrison.github.io/energise/)
 * [Link to the code repository](https://github.com/JonHarrison/energise)
 
-## Resources:
+## Wifi
+
+* The project WiKi is available [here](https://github.com/JonHarrison/energise/wiki)
+
+## External Resources
 
 * [Google Maps API ](https://developers.google.com/maps)
 * [Google Maps API documentation ](https://developers.google.com/maps/documentation)
