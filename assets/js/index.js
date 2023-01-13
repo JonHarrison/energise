@@ -222,7 +222,7 @@ function retrieveEVMarkers(geocode) {
   const radiusUnits = 'miles';
   const client = 'Energise'; // app name
   const maxResults = 50;
-  const queryURL = `https://api.openchargemap.io/v3/poi?key={APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}&client=${client}&maxresults=${maxResults}`;
+  const queryURL = `https://api.openchargemap.io/v3/poi?key=${APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}&client=${client}&maxresults=${maxResults}`;
   const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
   fetch(queryURL, options)
     .then((response) => {
@@ -254,12 +254,12 @@ function createCafeMarker(place) {
   const pathRoot = "./assets/icons/";
 
   const logos = [
-    { 'id':'costa',           'img':"Costa_Coffee_logo_logotype.png"},
-    { 'id':'starbucks',       'img':"Starbucks_Corporation_Logo_2011.svg" },
+    { 'id':'costa',           'img':"Costa-Coffee-logo-logotype.png"},
+    { 'id':'starbucks',       'img':"Starbucks-Corporation-Logo-2011.svg" },
     { 'id':'origin',          'img':"logo-origin-coffee-roasters-300x121.png"},
-    { 'id':'coffee island',   'img':"Coffee_island_logo_2019.jpg"},
-    { 'id':'caffè nero',      'img':"caffenero-logo_black_gold.png"},
-    { 'id':'caffe nero',      'img':"caffenero-logo_black_gold.png"},
+    { 'id':'coffee island',   'img':"Coffee-Island-logo-2019.jpg"},
+    { 'id':'caffè nero',      'img':"caffenero-logo-black-gold.png"},
+    { 'id':'caffe nero',      'img':"caffenero-logo-black-gold.png"},
     { 'id':'coffee republic', 'img':"coffee-republic.png"},
     { 'id':'pret a manger',   'img':"pret-a-manger.png" },
     // Caffe 82
