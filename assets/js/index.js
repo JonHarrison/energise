@@ -204,7 +204,7 @@ function retrieveEVMarkers(geocode) {
   const radiusUnits = 'miles';
   const client = 'Energise'; // app name
   const maxResults = 50;
-  const queryURL = `https://api.openchargemap.io/v3/poi?key={APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}&client=${client}&maxresults=${maxResults}`;
+  const queryURL = `https://api.openchargemap.io/v3/poi?key=${APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}&client=${client}&maxresults=${maxResults}`;
   const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
   fetch(queryURL, options)
     .then((response) => {
