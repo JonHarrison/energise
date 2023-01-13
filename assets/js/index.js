@@ -234,8 +234,8 @@ function createCafeMarker(place) {
   const pathRoot = "./assets/icons/";
 
   const logos = [
-    { 'id':'costa',           'img':"Costa-Costa-Coffee-logo-logotype.png"},
-    { 'id':'starbucks',       'img':"Starbucks-Starbucks-Corporation-Logo-2011.svg" },
+    { 'id':'costa',           'img':"Costa-Coffee-logo-logotype.png"},
+    { 'id':'starbucks',       'img':"Starbucks-Corporation-Logo-2011.svg" },
     { 'id':'origin',          'img':"logo-origin-coffee-roasters-300x121.png"},
     { 'id':'coffee island',   'img':"Coffee-Island-logo-2019.jpg"},
     { 'id':'caffè nero',      'img':"caffenero-logo-black-gold.png"},
