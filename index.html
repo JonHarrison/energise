@@ -45,9 +45,31 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto">
-       
+      <ul class="nav navbar-nav navbar-right ml-auto">
+
         <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            Settings
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <form id="settings" class="nav-item">
+              <div>
+                <label for="chargerRange" class="form-label">Charger radius</label>
+                <input type="range" min="1" max="20" name="radius" value="10" step="1" id="chargerRange" onChange="">
+                </span id="chargerRangeValue">10</span>
+              </div>
+              <hr>
+              <div>
+                <label for="chargerLocation" class="form-label">Charger locations</label>
+                <input type="range" min="10" max="100" name="locations" value="50" step="1" id="chargerLocations" onchange="">
+                </span id="chargerLocationsValue">50</span>
+              </div>
+            </form>
+          </div>
+        </li>
+
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             EV Charging Point
@@ -56,32 +78,32 @@
             <a class="dropdown-item">Radius</a>
             <form id="radius_checkbox_select">
               <select name="radius">
-                  <option value="1">1 Mile</option>
-                  <option value="2">2 Miles</option>
-                  <option value="3">3 Miles</option>
-                  <option value="4">4 Miles</option>
-                  <option value="5">5 Miles</option>
-                  <option value="6">6 Miles</option>
-                  <option value="7">7 Miles</option>
-                  <option value="8">8 Miles</option>
-                  <option value="9">9 Miles</option>
-                  <option value="10">10 Miles</option>
+                <option value="1">1 Mile</option>
+                <option value="2">2 Miles</option>
+                <option value="3">3 Miles</option>
+                <option value="4">4 Miles</option>
+                <option value="5">5 Miles</option>
+                <option value="6">6 Miles</option>
+                <option value="7">7 Miles</option>
+                <option value="8">8 Miles</option>
+                <option value="9">9 Miles</option>
+                <option value="10">10 Miles</option>
               </select>
-              </form>
+            </form>
 
             <a class="dropdown-item">No of EV Points</a>
             <form id="evpoints_checkbox_select">
               <select name="noofevpoints">
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                  <option value="40">40</option>
-                  <option value="50">50</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
               </select>
-              </form>
-        </li>
+            </form>
+        </li> -->
 
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             Coffee Shops
@@ -90,32 +112,32 @@
             <a class="dropdown-item">Coffee Shop by Brands</a>
             <form id="brand_checkbox_select">
               <select name="coffebrand">
-                  <option value="costa">Costa Coffee</option>
-                  <option value="starbucks">Starbucks</option>
-                  <option value="caffenero">Caffe Nero</option>
-                  <option value="pretamanger">Pret-A-Manger</option>
-                  <option value="coffeerepublic">Coffee Republic</option>
-                  <option value="coffeeisland">Coffee Island</option>
+                <option value="costa">Costa Coffee</option>
+                <option value="starbucks">Starbucks</option>
+                <option value="caffenero">Caffe Nero</option>
+                <option value="pretamanger">Pret-A-Manger</option>
+                <option value="coffeerepublic">Coffee Republic</option>
+                <option value="coffeeisland">Coffee Island</option>
               </select>
-              </form>
+            </form>
 
             <a class="dropdown-item">Distance form EV Points</a>
             <form id="distance_checkbox_select">
               <select name="distancefromev">
-                  <option value="100">100 meters</option>
-                  <option value="200">200 meters</option>
-                  <option value="300">300 meters</option>
-                  <option value="400">400 meters</option>
-                  <option value="500">500 meters</option>
+                <option value="100">100 meters</option>
+                <option value="200">200 meters</option>
+                <option value="300">300 meters</option>
+                <option value="400">400 meters</option>
+                <option value="500">500 meters</option>
               </select>
-              </form>
-          </li>
-        </ul>
-      </div>
-    </nav>
+            </form>
+        </li> -->
+      </ul>
+    </div>
+  </nav>
   <!-- End navigation bar -->
 
-    <!-- <header class="jumbotron-fluid vertical-center">
+  <!-- <header class="jumbotron-fluid vertical-center">
       <div class="text-center">
         <h1 class="display-2">Energise</h1>
       </div>
