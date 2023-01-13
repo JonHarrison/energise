@@ -33,6 +33,16 @@ let infoBubble;
 let infoWindow;
 let service;
 
+// localStorage
+const lsKEY = 'energise.settings';
+const settings = JSON.parse(localStorage.getItem(lsKEY)) ?? [ { demoMode:false } ];
+
+function storeSettings()
+{
+  localStorage.setItem(lsKey, JSON.stringify(settings));
+}
+//storeSettings();
+
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
 function addEVMarkers(data) {
@@ -199,6 +209,14 @@ function addEVMarkers(data) {
 }
 
 function retrieveEVMarkers(geocode) {
+
+  if (settings.demoMode) {
+    var data = [];
+    fetch('./assets/files/poi.json')
+      .then(response => data = response.json())
+      .then(data => { log(data); addEVMarkers(data); })
+  }
+  else {
   const APIKey = 'd3723cbe-33e1-4377-b08c-33f88d7ae336';
   const radius = 10; // miles
   const radiusUnits = 'miles';
@@ -221,6 +239,8 @@ function retrieveEVMarkers(geocode) {
       error(err)
       return err;
     });
+
+  }
 }
 
 function createCafeMarker(place) {
