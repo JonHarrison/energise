@@ -33,15 +33,46 @@ let infoBubble;
 let infoWindow;
 let service;
 
+let settings =
+{
+  demoMode: false,
+  ev:
+  {
+    radius: 10, // search radius 
+    radiusUnits: 'miles', // units [ 'miles' | 'km' ]
+    maxResults: 50 // limit the number of results (de-clutter the map)
+  },
+  coffee: { radius: 500 }
+};
+
 // localStorage
 const lsKEY = 'energise.settings';
-const settings = JSON.parse(localStorage.getItem(lsKEY)) ?? [ { demoMode:false } ];
-
-function storeSettings()
-{
-  localStorage.setItem(lsKey, JSON.stringify(settings));
+function loadSettings() {
+  try {
+    const ls = localStorage.getItem(lsKEY);
+    if (ls) {
+      // settings in local storage
+      settings = JSON.parse(ls) ?? [];
+    }
+    else {
+      // nothing in ls (yet) so write out default settings for next time
+      storeSettings();
+    }
+  }
+  catch (err) {
+    error(err);
+  }
 }
-//storeSettings();
+
+function storeSettings() {
+  try {
+    let lsString = JSON.stringify(settings);
+    localStorage.setItem(lsKEY, lsString);
+  }
+  catch (err) {
+    error(err);
+  }
+}
 
 const defaultGeocode = { lat: 51.509865, lon: -0.118092 }; // initial location - central London
 
@@ -218,11 +249,8 @@ function retrieveEVMarkers(geocode) {
   }
   else {
   const APIKey = 'd3723cbe-33e1-4377-b08c-33f88d7ae336';
-  const radius = 10; // miles
-  const radiusUnits = 'miles';
   const client = 'Energise'; // app name
-  const maxResults = 50;
-  const queryURL = `https://api.openchargemap.io/v3/poi?key=${APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${radius}&distanceunit=${radiusUnits}&client=${client}&maxresults=${maxResults}`;
+  const queryURL = `https://api.openchargemap.io/v3/poi?key=${APIKey}&latitude=${geocode.lat}&longitude=${geocode.lon}&distance=${settings.ev.radius}&distanceunit=${settings.ev.radiusUnits}&client=${client}&maxresults=${settings.ev.maxResults}`;
   const options = { method: 'GET', /*mode: 'cors',*/ headers: { 'Content-Type': 'application/json', /*'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*'*/ } };
   fetch(queryURL, options)
     .then((response) => {
@@ -415,4 +443,6 @@ function initAutocomplete() {
 
 }
 
+// app
+loadSettings();
 window.initAutocomplete = initAutocomplete;
