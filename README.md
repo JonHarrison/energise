@@ -89,7 +89,7 @@ Coffee shop details
 
 * [Google Maps API ](https://developers.google.com/maps)
 * [Google Maps API documentation ](https://developers.google.com/maps/documentation)
-* [Electric charging point locations - OpenchargeMap API](https://openchargemap.org/site/develop#api)
+* [Electric charging point locations - OpenChargeMap API](https://openchargemap.org/site/develop#api)
 
 ## Contact
 
