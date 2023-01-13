@@ -35,6 +35,7 @@ IT IS DONE
 * EV charge point marker when cicked shows a tabbed pop-up info window containing details from the provider and quantity of charge points
 * Coffee shop marker shows the company logo where available for easy identification
   * when clicked shows a pop-up info window containing the coffee shop name and address
+* Uses local storage for demo mode
   
 ## Challenges
 
