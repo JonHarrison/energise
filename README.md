@@ -30,14 +30,21 @@ https://github.com/JonHarrison/energise
 
 The deployed application can be accessed using below URL 
 
+https://jonharrison.github.io/energise/
 
 ### Mock-Up
 
 The home page of Energise website
-![The home page of Energise website .](images/homepage.png)
+![The home page of Energise website .](docs/homepage.png)
 
 Map Search 
-![Map Search  .](images/search.png)
+![Map Search  .](docs/search.png)
 
-Charging point details 
-![Map Search  .](images/point-details.png)
+Charging point location details 
+![Location details  .](docs/point-details.png)
+
+Charging point connection details
+![Connection details  .](docs/connection-details.png)
+
+Coffee shop details
+![Coffee shop details  .](docs/coffee-shop-details.png)
