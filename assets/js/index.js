@@ -277,7 +277,7 @@ function createCafeMarker(place) {
     }
   }
 
-  if (!found) console.log(place.name);
+  if (!found) log(place.name);
 
   const marker = new google.maps.Marker({
     map,
