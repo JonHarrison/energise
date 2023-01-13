@@ -8,7 +8,8 @@ The home page displays a map of your current location (or any location you may w
 
 ```text
 AS A green commuter and a coffee lover (or consumer of other hot or cold beverages) 
-I WANT to locate any electric car charging points near to my location with nearby coffee shops where I can have a drink while my car is getting charged
+I WANT to locate any electric car charging points near to my location with nearby coffee shops
+where I can have a drink while my car is getting charged
 SO THAT I can re-charge my car conveniently and also relax and enjoy my favorite beverage while waiting
 ```
 
