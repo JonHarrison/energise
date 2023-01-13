@@ -60,15 +60,19 @@ The home page of Energise website
 ![The home page of Energise website .](docs/homepage.png)
 
 Map Search 
+<br>
 ![Map Search  .](docs/search.png)
 
 Charging point location details 
+<br>
 ![Location details](docs/point-details.png)
 
 Charging point connection details
+<br>
 ![Connection details](docs/connection-details.png)
 
 Coffee shop details
+<br>
 ![Coffee shop details](docs/coffee-shop-details.png)
 
 ## Links
